@@ -7,6 +7,7 @@ import com.example.EmployeeLeave.Exceptions.LeaveRequestNotFoundException;
 import com.example.EmployeeLeave.Modal.Employee;
 import com.example.EmployeeLeave.Modal.LeaveRequest;
 import com.example.EmployeeLeave.Modal.LeaveType;
+import com.example.EmployeeLeave.Modal.ManageReq;
 import com.example.EmployeeLeave.Repository.EmployeeRepo;
 import com.example.EmployeeLeave.Repository.LeaveRequestRepo;
 import com.example.EmployeeLeave.Repository.LeaveTypeRepo;
@@ -85,8 +86,22 @@ public class LeaveRequestService {
         return res;
     }
 
-    public List<LeaveRequest> getAllPendingReq(){
-        return leaveRequestRepo.findByStatus(ReqStatus.PENDING);
+    public List<ManageReq> getAllPendingReq(){
+        List<LeaveRequest> reqs = leaveRequestRepo.findByStatus(ReqStatus.PENDING);
+        List<ManageReq> ret = new ArrayList<>();
+        for(LeaveRequest req : reqs){
+            ManageReq m = new ManageReq();
+            m.setLeaveType(req.getLeaveType().getName());
+            m.setId(req.getId());
+            m.setStart(req.getStartDate());
+            m.setEmployeeName(req.getEmployee().getName());
+            m.setEnd(req.getEndDate());
+            m.setAppliedDate(req.getApplyDate());
+            m.setEmployeeId(req.getEmployee().getId());
+            m.setNoDays(req.getNumberOfDays());
+            ret.add(m);
+        }
+        return ret;
     }
 
     // Update the Leave Balance
